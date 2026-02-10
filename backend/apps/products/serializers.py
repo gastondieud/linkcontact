@@ -1,0 +1,52 @@
+"""
+Serializers for products app.
+"""
+from rest_framework import serializers
+from .models import Product
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    """CRUD - products for authenticated user. Image as full URL."""
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'image', 'created_at']
+        read_only_fields = ['created_at']
+
+    def get_image(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None
+
+
+class ProductCreateUpdateSerializer(serializers.ModelSerializer):
+    """POST/PUT - multipart/form-data, image required on create."""
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'price', 'image']
+
+    def validate_image(self, value):
+        if not value and not self.instance:
+            raise serializers.ValidationError('L\'image est obligatoire pour un nouveau produit.')
+        return value
+
+
+class ProductPublicSerializer(serializers.ModelSerializer):
+    """Public product list - full image URL."""
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'image']
+
+    def get_image(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None

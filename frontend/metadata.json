@@ -1,0 +1,7 @@
+{
+  "name": "LinkContact SaaS",
+  "description": "A modern SaaS for local sellers to create mini-shops, manage products, and receive WhatsApp orders.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
