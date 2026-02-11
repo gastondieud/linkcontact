@@ -3,38 +3,43 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  // Charge les variables d'environnement depuis .env ou Render
+  // Charger les variables d'environnement depuis le fichier .env
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react()],
     server: {
       port: 3000,
-      host: '0.0.0.0', // permet l'accès depuis Render
-    },
-    define: {
-      // API key si nécessaire pour d'autres services
-      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      // URL du backend
-      'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+      host: '0.0.0.0', // obligatoire pour Render
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src'), // alias pratique pour importer depuis src
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
+    define: {
+      // Les variables d'environnement accessibles dans le code frontend
+      'process.env': {
+        VITE_API_URL: JSON.stringify(env.VITE_API_URL),
+        GEMINI_API_KEY: JSON.stringify(env.GEMINI_API_KEY),
       },
     },
     build: {
       outDir: 'dist', // dossier de build
-      sourcemap: true, // utile pour debugging
+      sourcemap: false,
+      rollupOptions: {
+        output: {
+          // Eviter les gros chunks
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
     css: {
-      postcss: {
-        plugins: [
-          require('tailwindcss'),
-          require('autoprefixer'),
-        ],
-      },
+      postcss: path.resolve(__dirname, './postcss.config.js'), // si tu as postcss + tailwind
     },
   };
 });

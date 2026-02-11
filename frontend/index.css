@@ -1,7 +1,9 @@
 /* index.css */
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 /* Ajoute ici tes styles globaux si nécessaire */
 body {
