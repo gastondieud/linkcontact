@@ -38,7 +38,10 @@ const ProductForm: React.FC = () => {
             price: res.data.price.toString(),
             description: res.data.description,
           });
-          if (res.data.image) setPreview(res.data.image);
+          if (res.data.image) {
+            const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/');
+            setPreview(`${API_URL}${res.data.image}`);
+          }
           setEditId(res.data.id);
         })
         .finally(() => setFetching(false));
@@ -65,13 +68,13 @@ const ProductForm: React.FC = () => {
 
     try {
       if (editId) {
-        // mise à jour si editId défini
         await api.put(`products/${editId}/`, data);
       } else if (isEdit) {
         await api.put(`products/${id}/`, data);
       } else {
         await api.post('products/', data);
       }
+
       // réinitialiser le formulaire après soumission
       setFormData({ name: '', price: '', description: '' });
       setPreview(null);
@@ -205,28 +208,41 @@ const ProductForm: React.FC = () => {
           <div className="text-center py-10">Aucun produit disponible.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
-              <div
-                key={product.id}
-                className="border rounded-xl p-4 shadow hover:shadow-lg transition cursor-pointer"
-                onClick={() => {
-                  setFormData({
-                    name: product.name,
-                    price: product.price.toString(),
-                    description: product.description,
-                  });
-                  setPreview(product.image || null);
-                  setEditId(product.id);
-                }}
-              >
-                {product.image && (
-                  <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-lg mb-4" />
-                )}
-                <h2 className="font-bold text-lg">{product.name}</h2>
-                <p className="text-gray-500 mb-2">{product.description}</p>
-                <p className="text-indigo-600 font-semibold">{product.price.toLocaleString()} CFA</p>
-              </div>
-            ))}
+            {products.map(product => {
+              const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/');
+              const imageUrl = product.image ? `${API_URL}${product.image}` : null;
+
+              return (
+                <div
+                  key={product.id}
+                  className="border rounded-xl p-4 shadow hover:shadow-lg transition cursor-pointer"
+                  onClick={() => {
+                    setFormData({
+                      name: product.name,
+                      price: product.price.toString(),
+                      description: product.description,
+                    });
+                    setPreview(imageUrl);
+                    setEditId(product.id);
+                  }}
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={product.name}
+                      className="w-full h-48 object-cover rounded-lg mb-4"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
+                      <span className="text-gray-400">Pas d'image</span>
+                    </div>
+                  )}
+                  <h2 className="font-bold text-lg">{product.name}</h2>
+                  <p className="text-gray-500 mb-2">{product.description}</p>
+                  <p className="text-indigo-600 font-semibold">{product.price.toLocaleString()} CFA</p>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
