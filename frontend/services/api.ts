@@ -6,7 +6,9 @@ const API_BASE_URL = 'http://localhost:8000/api/';
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
-
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL
+});
 // Interceptor for adding JWT Token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
