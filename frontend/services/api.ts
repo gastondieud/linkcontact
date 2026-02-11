@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'https://linkcontact.onrender.com/api/';
+const API_BASE_URL = 'https://linkcontact.onrender.com/';
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 });
