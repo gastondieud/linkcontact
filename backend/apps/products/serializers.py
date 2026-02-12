@@ -53,7 +53,11 @@ class ProductPublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'image']
+        fields = ['id', 'name', 'description', 'price', 'image', 'shop_name', 'shop_slug', 'shop_whatsapp']
+
+    shop_name = serializers.CharField(source='shop.name', read_only=True)
+    shop_slug = serializers.CharField(source='shop.slug', read_only=True)
+    shop_whatsapp = serializers.CharField(source='shop.whatsapp_number', read_only=True)
 
     def get_image(self, obj):
         if obj.image:

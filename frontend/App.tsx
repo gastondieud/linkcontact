@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import ProductForm from './pages/ProductForm';
 import ShopSettings from './pages/ShopSettings';
 import PublicShop from './pages/PublicShop';
+import Marketplace from './pages/Marketplace';
 
 // Components
 import Layout from './components/Layout';
@@ -57,6 +58,9 @@ const App: React.FC = () => {
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Marketplace */}
+        <Route path="/marketplace" element={<Marketplace />} />
 
         {/* Public Shop Route */}
         <Route path="/shop/:slug" element={<PublicShop />} />

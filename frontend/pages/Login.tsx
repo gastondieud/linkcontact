@@ -21,10 +21,10 @@ const Login: React.FC = () => {
     try {
       const res = await api.post('auth/login/', { email, password });
       const { access, refresh } = res.data;
-      
+
       setToken(access);
       localStorage.setItem('refresh_token', refresh);
-      
+
       const userRes = await api.get('auth/me/');
       setUser(userRes.data);
 
@@ -100,7 +100,14 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <div className="mt-8 text-center">
+        <Link to="/marketplace" className="inline-flex items-center gap-2 text-indigo-600 font-bold bg-indigo-50 px-6 py-3 rounded-xl hover:bg-indigo-100 transition-colors">
+          <span className="text-xl">🛍️</span> Voir le Marketplace public
+        </Link>
+      </div>
     </div>
+    </div >
   );
 };
 

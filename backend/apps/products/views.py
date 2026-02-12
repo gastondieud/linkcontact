@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
 from .models import Product
-from .serializers import ProductSerializer, ProductCreateUpdateSerializer
+from .serializers import ProductSerializer, ProductCreateUpdateSerializer, ProductPublicSerializer
 from apps.shops.models import Shop
 
 
@@ -58,10 +58,14 @@ class ProductDetailView(APIView):
         ser.save()
         return Response(ProductSerializer(ser.instance, context={'request': request}).data)
 
-    def delete(self, request, pk):
-        try:
-            product = self._get_product(request, pk)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PublicProductListView(APIView):
+    """GET /api/public/products/ - public list of all products."""
+    permission_classes = []  # Public access
+
+    def get(self, request):
+        products = Product.objects.all().order_by('-created_at')
+        return Response(ProductPublicSerializer(products, many=True, context={'request': request}).data)

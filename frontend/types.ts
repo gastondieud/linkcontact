@@ -22,7 +22,9 @@ export interface Product {
   description: string;
   price: number;
   image?: string;
-  user?: number;
+  shop_name?: string;
+  shop_slug?: string;
+  shop_whatsapp?: string;
 }
 
 export interface Stats {

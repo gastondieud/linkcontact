@@ -25,7 +25,8 @@ const Layout: React.FC = () => {
 
   const navItems = [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
-    { label: 'Mes Produits', icon: <Package size={20} />, path: '/products/new' }, // Simplified for navigation
+    { label: 'Mes Produits', icon: <Package size={20} />, path: '/products/new' },
+    { label: 'Marketplace', icon: <ShoppingBag size={20} />, path: '/marketplace' },
     { label: 'Paramètres', icon: <Settings size={20} />, path: '/settings' },
   ];
 
@@ -44,8 +45,8 @@ const Layout: React.FC = () => {
               key={item.path}
               to={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${location.pathname === item.path
-                  ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
+                ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
                 }`}
             >
               {item.icon}
