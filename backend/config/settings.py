@@ -103,6 +103,9 @@ STORAGES = {
     },
 }
 
+# Compatibility for packages that reference this directly (like django-cloudinary-storage)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
