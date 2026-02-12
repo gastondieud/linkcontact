@@ -2,11 +2,11 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { 
-  LayoutDashboard, 
-  Package, 
-  Settings, 
-  LogOut, 
+import {
+  LayoutDashboard,
+  Package,
+  Settings,
+  LogOut,
   ExternalLink,
   Menu,
   X
@@ -43,11 +43,10 @@ const Layout: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                location.pathname === item.path 
-                  ? 'bg-indigo-50 text-indigo-600 font-semibold' 
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${location.pathname === item.path
+                  ? 'bg-indigo-50 text-indigo-600 font-semibold'
                   : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
-              }`}
+                }`}
             >
               {item.icon}
               {item.label}
@@ -57,9 +56,9 @@ const Layout: React.FC = () => {
 
         <div className="mt-auto space-y-2 pt-6 border-t border-gray-100">
           {shop && (
-            <a 
-              href={`#/shop/${shop.slug}`} 
-              target="_blank" 
+            <a
+              href={`#/shop/${shop.slug}`}
+              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-xl"
             >
@@ -104,6 +103,17 @@ const Layout: React.FC = () => {
           <button onClick={handleLogout} className="flex items-center gap-4 py-4 text-red-500 font-medium">
             <LogOut size={20} /> Déconnexion
           </button>
+          {shop && (
+            <a
+              href={`#/shop/${shop.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 py-4 border-t border-gray-100 text-emerald-600 font-medium"
+            >
+              <ExternalLink size={20} />
+              Voir ma boutique
+            </a>
+          )}
         </div>
       )}
 
