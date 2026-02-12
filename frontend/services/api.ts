@@ -1,22 +1,46 @@
-
 import axios from 'axios';
 
-const API_BASE_URL = 'https://linkcontact.onrender.com/api/';
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
-});
-// Interceptor for adding JWT Token
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => Promise.reject(error));
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-// Interceptor for token refresh/expiry handling
-// Interceptor for token refresh/expiry handling
+// Instance principale
+export const api = axios.create({
+  baseURL: API_BASE_URL
+});
+
+// =======================
+// ROUTES PUBLIQUES
+// =======================
+const publicEndpoints = [
+  '/shops/',
+  '/stats/visit/',
+];
+
+// =======================
+// REQUEST INTERCEPTOR
+// =======================
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+
+    // Vérifie si endpoint public
+    const isPublic = publicEndpoints.some((url) =>
+      config.url?.startsWith(url)
+    );
+
+    if (!isPublic && token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// =======================
+// REFRESH TOKEN SYSTEM
+// =======================
 let isRefreshing = false;
+
 let failedQueue: Array<{
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
@@ -34,7 +58,17 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Ne refresh PAS pour endpoints publics
+      const isPublic = publicEndpoints.some((url) =>
+        originalRequest.url?.startsWith(url)
+      );
+
+      if (isPublic) {
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -56,27 +90,34 @@ api.interceptors.response.use(
         const refresh = localStorage.getItem('refresh_token');
         if (!refresh) throw new Error('No refresh token');
 
-        const res = await axios.post(`${API_BASE_URL}auth/refresh/`, { refresh });
+        const res = await axios.post(`${API_BASE_URL}auth/refresh/`, {
+          refresh
+        });
+
         const { access } = res.data;
-        if (!access) throw new Error('No access token in refresh response');
 
         localStorage.setItem('token', access);
         api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
         processQueue(null, access);
         isRefreshing = false;
 
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${access}`;
         }
+
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
         isRefreshing = false;
+
         localStorage.clear();
         window.location.href = '#/login';
+
         return Promise.reject(err);
       }
     }
+
     return Promise.reject(error);
   }
 );

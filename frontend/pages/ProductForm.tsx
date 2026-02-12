@@ -26,7 +26,6 @@ const ProductForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
 
-  // --- nouvelle variable pour gérer l'édition d'un produit depuis la liste ---
   const [editId, setEditId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -38,10 +37,12 @@ const ProductForm: React.FC = () => {
             price: res.data.price.toString(),
             description: res.data.description,
           });
+
           if (res.data.image) {
             const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/');
             setPreview(`${API_URL}${res.data.image}`);
           }
+
           setEditId(res.data.id);
         })
         .finally(() => setFetching(false));
@@ -75,13 +76,11 @@ const ProductForm: React.FC = () => {
         await api.post('products/', data);
       }
 
-      // réinitialiser le formulaire après soumission
       setFormData({ name: '', price: '', description: '' });
       setPreview(null);
       setImageFile(null);
       setEditId(null);
 
-      // recharger la liste
       fetchProducts();
     } catch (err) {
       alert("Une erreur est survenue lors de l'enregistrement.");
@@ -91,7 +90,6 @@ const ProductForm: React.FC = () => {
     }
   };
 
-  // --- Liste des produits intégrée ---
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
 
@@ -127,11 +125,13 @@ const ProductForm: React.FC = () => {
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-        {/* Image Upload */}
+
+        {/* IMAGE */}
         <div className="space-y-4">
           <label className="block text-sm font-semibold text-gray-700">Image du produit</label>
           <div className="flex items-center justify-center w-full">
             <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-3xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all group relative overflow-hidden">
+
               {preview ? (
                 <>
                   <img src={preview} alt="Preview" className="w-full h-full object-cover" />
@@ -146,32 +146,31 @@ const ProductForm: React.FC = () => {
                   <p className="text-xs text-gray-400">PNG, JPG ou WEBP (Max. 5MB)</p>
                 </div>
               )}
+
               <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
             </label>
           </div>
         </div>
 
-        {/* Nom, Prix, Description */}
+        {/* FORM */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nom du produit</label>
             <input
               required
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
-              placeholder="Ex: T-shirt en coton bio"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Prix en CFA</label>
             <input
               required
               type="number"
               step="100"
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
-              placeholder="Ex: 5000"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
             />
@@ -182,8 +181,7 @@ const ProductForm: React.FC = () => {
             <textarea
               required
               rows={4}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"
-              placeholder="Décrivez votre produit pour donner envie à vos clients..."
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
@@ -193,19 +191,17 @@ const ProductForm: React.FC = () => {
         <button
           disabled={loading}
           type="submit"
-          className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2"
+          className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {editId || isEdit ? 'Enregistrer les modifications' : 'Créer le produit'}
         </button>
       </form>
 
-      {/* --- Affichage des produits en dessous avec click pour édition --- */}
+      {/* LISTE PRODUITS */}
       <div className="mt-12">
         {productsLoading ? (
           <div className="text-center py-10">Chargement des produits...</div>
-        ) : products.length === 0 ? (
-          <div className="text-center py-10">Aucun produit disponible.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map(product => {
@@ -227,11 +223,7 @@ const ProductForm: React.FC = () => {
                   }}
                 >
                   {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt={product.name}
-                      className="w-full h-48 object-cover rounded-lg mb-4"
-                    />
+                    <img src={imageUrl} alt={product.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                   ) : (
                     <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
                       <span className="text-gray-400">Pas d'image</span>
