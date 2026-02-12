@@ -41,8 +41,7 @@ class ShopBySlugView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, slug):
-        user = get_object_or_404(User, slug=slug)
-        shop = get_object_or_404(Shop, user=user)
+        shop = get_object_or_404(Shop, slug=slug)
         return Response(ShopPublicSerializer(shop).data)
 
 
@@ -53,8 +52,8 @@ class ShopProductsBySlugView(APIView):
     def get(self, request, slug):
         from apps.products.models import Product
         from apps.products.serializers import ProductPublicSerializer
-        user = get_object_or_404(User, slug=slug)
-        products = Product.objects.filter(shop__user=user).order_by('-created_at')
+        shop = get_object_or_404(Shop, slug=slug)
+        products = Product.objects.filter(shop=shop).order_by('-created_at')
         return Response(ProductPublicSerializer(products, many=True, context={'request': request}).data)
 
 
