@@ -39,8 +39,8 @@ const ProductForm: React.FC = () => {
           });
 
           if (res.data.image) {
-            const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/');
-            setPreview(`${API_URL}${res.data.image}`);
+            const img = res.data.image;
+            setPreview(img.startsWith('http') ? img : `${import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/')}${img}`);
           }
 
           setEditId(res.data.id);
@@ -112,8 +112,8 @@ const ProductForm: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <button 
-        onClick={() => navigate(-1)} 
+      <button
+        onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 transition-colors"
       >
         <ChevronLeft size={20} />
@@ -206,7 +206,9 @@ const ProductForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map(product => {
               const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '/');
-              const imageUrl = product.image ? `${API_URL}${product.image}` : null;
+              const imageUrl = product.image
+                ? (product.image.startsWith('http') ? product.image : `${API_URL}${product.image}`)
+                : null;
 
               return (
                 <div
