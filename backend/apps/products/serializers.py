@@ -1,8 +1,11 @@
 """
 Serializers for products app.
 """
+import logging
 from rest_framework import serializers
 from .models import Product
+
+logger = logging.getLogger(__name__)
 
 
 class ProductSerializer(serializers.ModelSerializer):
