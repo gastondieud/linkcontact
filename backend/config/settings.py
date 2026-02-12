@@ -122,8 +122,14 @@ AUTH_USER_MODEL = 'accounts.User'
 
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
 CORS_ALLOWED_ORIGINS = [
-    "https://linkcontact-saas.onrender.com/api/",
+    "https://linkcontact-saas.onrender.com",
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://linkcontact-saas.onrender.com",
+]
+
+# Render/Proxy Security
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Django REST Framework
