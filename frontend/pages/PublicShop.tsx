@@ -37,7 +37,7 @@ const PublicShop: React.FC = () => {
     api.post('stats/visit/', { shop_slug: slug, action: 'whatsapp_click' });
 
     const message = encodeURIComponent(
-      `Bonjour ! Je suis intéressé par votre produit : ${product.name} (${product.price}€). Est-il disponible ?`
+      `Bonjour ! Je suis intéressé par votre produit : ${product.name} (${product.price} CFA). Est-il disponible ?`
     );
 
     const cleanNumber = shop.whatsapp_number
@@ -113,9 +113,9 @@ const PublicShop: React.FC = () => {
                 ? product.image.startsWith('http')
                   ? product.image
                   : `${import.meta.env.VITE_API_URL.replace(
-                      /\/api\/?$/,
-                      '/'
-                    )}${product.image}`
+                    /\/api\/?$/,
+                    '/'
+                  )}${product.image}`
                 : null;
 
               return (

@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import api from '../services/api';
-import { 
-  Plus, 
-  TrendingUp, 
-  Users, 
-  ShoppingBag, 
-  MoreVertical, 
-  Edit2, 
-  Trash2, 
+import {
+  Plus,
+  TrendingUp,
+  Users,
+  ShoppingBag,
+  MoreVertical,
+  Edit2,
+  Trash2,
   Eye,
   AlertCircle
 } from 'lucide-react';
@@ -66,8 +66,8 @@ const Dashboard: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Bienvenue, {shop?.name}</h1>
           <p className="text-gray-500">Voici un aperçu de votre activité.</p>
         </div>
-        <Link 
-          to="/products/new" 
+        <Link
+          to="/products/new"
           className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 self-start"
         >
           <Plus size={20} />
@@ -106,11 +106,11 @@ const Dashboard: React.FC = () => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={stats?.visits_by_day || []}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
-            <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
-            <Tooltip 
-              cursor={{fill: '#f9fafb'}} 
-              contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} 
+            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+            <Tooltip
+              cursor={{ fill: '#f9fafb' }}
+              contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
             />
             <Bar dataKey="count" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
           </BarChart>
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
                     <Link to={`/products/edit/${product.id}`} className="p-2 bg-white/90 backdrop-blur rounded-lg text-gray-700 shadow-sm hover:bg-white">
                       <Edit2 size={16} />
                     </Link>
-                    <button 
+                    <button
                       onClick={() => deleteProduct(product.id)}
                       className="p-2 bg-white/90 backdrop-blur rounded-lg text-red-500 shadow-sm hover:bg-white"
                     >
@@ -151,7 +151,7 @@ const Dashboard: React.FC = () => {
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-bold text-gray-900 truncate pr-2">{product.name}</h4>
-                    <span className="text-indigo-600 font-bold text-lg">{product.price}€</span>
+                    <span className="text-indigo-600 font-bold text-lg">{product.price} CFA</span>
                   </div>
                   <p className="text-gray-500 text-sm line-clamp-2">{product.description}</p>
                 </div>
