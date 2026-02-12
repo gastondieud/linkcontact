@@ -9,7 +9,8 @@ import {
   LogOut,
   ExternalLink,
   Menu,
-  X
+  X,
+  ShoppingBag
 } from 'lucide-react';
 
 const Layout: React.FC = () => {

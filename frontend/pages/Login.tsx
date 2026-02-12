@@ -107,7 +107,6 @@ const Login: React.FC = () => {
         </Link>
       </div>
     </div>
-    </div >
   );
 };
 
