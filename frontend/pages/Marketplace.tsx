@@ -157,8 +157,8 @@ const Marketplace: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <div className="mt-6 pt-4 border-t border-gray-50">
-                                        <button
+                                    <div className="mt-6 pt-4 border-t border-gray-50 flex flex-col gap-3">
+                                        {/* <button
                                             onClick={() => {
                                                 if (product.shop_whatsapp) {
                                                     sendWhatsApp(product, product.shop_whatsapp);
@@ -170,11 +170,19 @@ const Marketplace: React.FC = () => {
                                         >
                                             <MessageCircle size={20} />
                                             Commander sur WhatsApp
-                                        </button>
-                                        {product.shop_slug && (
-                                            <Link to={`/shop/${product.shop_slug}`} className="block text-center mt-3 text-xs font-medium text-gray-400 hover:text-indigo-500 transition-colors">
+                                        </button> */}
+
+                                        {product.shop_slug ? (
+                                            <Link
+                                                to={`/shop/${product.shop_slug}`}
+                                                className="w-full bg-indigo-600 text-white py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 group-hover:shadow-indigo-200 active:scale-95"
+                                            >
                                                 Visiter la boutique
                                             </Link>
+                                        ) : (
+                                            <button disabled className="w-full bg-gray-100 text-gray-400 py-3.5 rounded-2xl font-bold cursor-not-allowed">
+                                                Boutique indisponible
+                                            </button>
                                         )}
                                     </div>
                                 </div>
