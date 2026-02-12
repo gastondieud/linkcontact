@@ -121,15 +121,27 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Dynamic config for Render
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 AUTH_USER_MODEL = 'accounts.User'
 
-CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
-CORS_ALLOWED_ORIGINS = [
-    "https://linkcontact-saas.onrender.com",
-]
+CORS_ALLOW_ALL_ORIGINS = True  # Simplify for troubleshooting
+# CORS_ALLOWED_ORIGINS = [
+#     "https://linkcontact-saas.onrender.com",
+#     "https://linkcontact.onrender.com",
+# ]
+# if RENDER_EXTERNAL_HOSTNAME:
+#     CORS_ALLOWED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
+
 CSRF_TRUSTED_ORIGINS = [
     "https://linkcontact-saas.onrender.com",
+    "https://linkcontact.onrender.com",
 ]
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
 # Render/Proxy Security
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
