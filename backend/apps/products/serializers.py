@@ -19,10 +19,19 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
+            try:
+                url = obj.image.url
+                # Cloudinary URLs are usually absolute http/https
+                if url.startswith('http'):
+                    return url.strip()
+                
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(url)
+                return url
+            except Exception as e:
+                logger.error(f"Error getting image URL in ProductSerializer: {e}")
+                return None
         return None
 
 
@@ -48,8 +57,17 @@ class ProductPublicSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
+            try:
+                url = obj.image.url
+                # Cloudinary URLs are usually absolute http/https
+                if url.startswith('http'):
+                    return url.strip()
+                
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(url)
+                return url
+            except Exception as e:
+                logger.error(f"Error getting image URL in ProductPublicSerializer: {e}")
+                return None
         return None
