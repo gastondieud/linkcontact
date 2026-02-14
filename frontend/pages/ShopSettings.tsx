@@ -2,16 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import api from '../services/api';
-import { Save, Loader2, Check, Smartphone, Info, Link as LinkIcon } from 'lucide-react';
+import { Save, Loader2, Check, Smartphone, Info, Link as LinkIcon, Upload, Image as ImageIcon } from 'lucide-react';
 
 const ShopSettings: React.FC = () => {
   const { shop, setShop } = useStore();
   const [formData, setFormData] = useState({
+    name: '',
+    description: '',
     whatsapp_number: '',
     slug: '',
     first_name: '',
     last_name: '',
   });
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [slugStatus, setSlugStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
@@ -19,11 +23,16 @@ const ShopSettings: React.FC = () => {
   useEffect(() => {
     if (shop) {
       setFormData({
+        name: shop.name,
+        description: shop.description,
         whatsapp_number: shop.whatsapp_number,
         slug: shop.slug,
         first_name: shop.first_name || '',
         last_name: shop.last_name || '',
       });
+      if (shop.logo) {
+        setLogoPreview(shop.logo);
+      }
     }
   }, [shop]);
 
@@ -47,11 +56,36 @@ const ShopSettings: React.FC = () => {
     checkSlug(val);
   };
 
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.put('shops/me/', formData);
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('description', formData.description);
+      data.append('whatsapp_number', formData.whatsapp_number);
+      data.append('slug', formData.slug);
+      data.append('first_name', formData.first_name);
+      data.append('last_name', formData.last_name);
+      if (logoFile) {
+        data.append('logo', logoFile);
+      }
+
+      const res = await api.put('shops/me/', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       setShop(res.data);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -88,6 +122,36 @@ const ShopSettings: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
               />
             </div>
+          </div>
+
+          {/* Logo Upload */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+              <ImageIcon size={16} className="text-gray-400" />
+              Logo de la boutique
+            </label>
+            <div className="flex items-center gap-6">
+              {logoPreview && (
+                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <label className="flex-1 cursor-pointer">
+                <div className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-all flex items-center justify-center gap-2 text-gray-600">
+                  <Upload size={18} />
+                  {logoPreview ? 'Changer le logo' : 'Télécharger un logo'}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+            <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+              <Info size={12} /> Format recommandé : carré (ex: 512x512px)
+            </p>
           </div>
 
           {/* Shop Name */}

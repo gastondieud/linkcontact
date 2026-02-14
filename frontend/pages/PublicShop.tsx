@@ -73,23 +73,23 @@ const PublicShop: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="py-12 px-6 text-center bg-gray-50 border-b">
+      <header className="py-12 px-6 text-center bg-gradient-to-br from-indigo-50 to-purple-50 border-b">
         <div className="max-w-3xl mx-auto">
           {shop.logo ? (
-            <img
-              src={shop.logo}
-              alt={shop.name}
-              className="w-24 h-24 rounded-full mx-auto mb-6 object-cover shadow-md"
-            />
+            <div className="w-32 h-32 mx-auto mb-6 rounded-3xl overflow-hidden border-4 border-white shadow-xl">
+              <img
+                src={shop.logo}
+                alt={shop.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
           ) : (
-            <div className="w-24 h-24 bg-indigo-600 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-              {shop.name.charAt(0)}
+            <div className="w-32 h-32 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-5xl font-bold shadow-xl border-4 border-white">
+              {shop.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {shop.name}
-          </h1>
-          <p className="text measuring5lg mx-auto text-gray-500">
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">{shop.name}</h1>
+          <p className="text-lg mx-auto text-gray-500">
             {shop.description}
           </p>
         </div>
