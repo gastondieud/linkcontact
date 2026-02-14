@@ -7,10 +7,10 @@ import { Save, Loader2, Check, Smartphone, Info, Link as LinkIcon } from 'lucide
 const ShopSettings: React.FC = () => {
   const { shop, setShop } = useStore();
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
     whatsapp_number: '',
     slug: '',
+    first_name: '',
+    last_name: '',
   });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -19,10 +19,10 @@ const ShopSettings: React.FC = () => {
   useEffect(() => {
     if (shop) {
       setFormData({
-        name: shop.name,
-        description: shop.description,
         whatsapp_number: shop.whatsapp_number,
         slug: shop.slug,
+        first_name: shop.first_name || '',
+        last_name: shop.last_name || '',
       });
     }
   }, [shop]);
@@ -68,6 +68,28 @@ const ShopSettings: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
         <div className="space-y-6">
+          {/* Identity */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Prénom</label>
+              <input
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                placeholder="Jean"
+                value={formData.first_name}
+                onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Nom</label>
+              <input
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                placeholder="Dupont"
+                value={formData.last_name}
+                onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+              />
+            </div>
+          </div>
+
           {/* Shop Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nom de la boutique</label>
@@ -133,9 +155,8 @@ const ShopSettings: React.FC = () => {
         <button
           disabled={loading || slugStatus === 'taken'}
           type="submit"
-          className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 ${
-            saved ? 'bg-emerald-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100'
-          }`}
+          className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 ${saved ? 'bg-emerald-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100'
+            }`}
         >
           {loading ? <Loader2 className="animate-spin" /> : saved ? <Check size={20} /> : <Save size={20} />}
           {saved ? 'Modifications enregistrées !' : 'Enregistrer les paramètres'}

@@ -14,6 +14,8 @@ export interface Shop {
   whatsapp_number: string;
   logo?: string;
   user?: number;
+  first_name?: string;
+  last_name?: string;
 }
 
 export interface Product {

@@ -22,7 +22,14 @@ class RegisterView(APIView):
             return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
         user = ser.save()
         from apps.shops.models import Shop
-        Shop.objects.get_or_create(user=user)
+        Shop.objects.get_or_create(
+            user=user,
+            defaults={
+                'name': user.shop_name,
+                'slug': user.slug,
+                'whatsapp_number': user.whatsapp_number
+            }
+        )
         from rest_framework_simplejwt.tokens import RefreshToken
         refresh = RefreshToken.for_user(user)
         return Response({
