@@ -7,14 +7,10 @@ from .models import Shop
 
 class ShopMeSerializer(serializers.ModelSerializer):
     """GET /api/shops/me/ - shop_name, slug, description, whatsapp_number, logo."""
-    shop_name = serializers.CharField(source='user.shop_name', read_only=True)
-    slug = serializers.SlugField(source='user.slug', read_only=True)
-    whatsapp_number = serializers.CharField(source='user.whatsapp_number', read_only=True)
-    name = serializers.CharField(source='user.shop_name', read_only=True)
-
+    # We use the native fields of the Shop model
     class Meta:
         model = Shop
-        fields = ['shop_name', 'slug', 'description', 'whatsapp_number', 'logo', 'name']
+        fields = ['id', 'name', 'slug', 'description', 'whatsapp_number', 'logo']
 
 
 class ShopMeUpdateSerializer(serializers.ModelSerializer):
@@ -46,11 +42,7 @@ class ShopMeUpdateSerializer(serializers.ModelSerializer):
 
 
 class ShopPublicSerializer(serializers.ModelSerializer):
-    """GET /api/shops/{slug}/ - public shop info. Frontend expects: name, description, slug, whatsapp_number, logo."""
-    name = serializers.CharField(source='user.shop_name', read_only=True)
-    slug = serializers.SlugField(source='user.slug', read_only=True)
-    whatsapp_number = serializers.CharField(source='user.whatsapp_number', read_only=True)
-
+    """GET /api/shops/{slug}/ - public shop info."""
     class Meta:
         model = Shop
         fields = ['id', 'name', 'description', 'slug', 'whatsapp_number', 'logo']

@@ -112,7 +112,10 @@ api.interceptors.response.use(
         isRefreshing = false;
 
         localStorage.clear();
-        window.location.href = '#/login';
+        // Force redirect to login if refresh fails
+        if (window.location.hash !== '#/login') {
+          window.location.hash = '/login';
+        }
 
         return Promise.reject(err);
       }

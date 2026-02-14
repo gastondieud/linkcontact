@@ -24,12 +24,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App: React.FC = () => {
   const { setToken, setUser, setShop } = useStore();
+  const [initializing, setInitializing] = React.useState(true);
 
   useEffect(() => {
     const initApp = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        // keep token in store so ProtectedRoute works
         setToken(token);
         try {
           const userRes = await api.get('auth/me/');
@@ -45,12 +45,23 @@ const App: React.FC = () => {
           setToken(null);
           setUser(null);
           setShop(null);
-          window.location.href = '#/login';
         }
       }
+      setInitializing(false);
     };
     initApp();
   }, [setToken, setUser, setShop]);
+
+  if (initializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <p className="text-gray-500 font-medium">Initialisation...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <HashRouter>

@@ -101,20 +101,22 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Chart Section */}
-      <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm h-80">
+      <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm h-80 flex flex-col">
         <h3 className="font-bold text-gray-800 mb-6">Visites des 7 derniers jours</h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={stats?.visits_by_day || []}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-            <Tooltip
-              cursor={{ fill: '#f9fafb' }}
-              contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-            />
-            <Bar dataKey="count" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="flex-1 min-h-0">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={stats?.visits_by_day || []}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
+              <Tooltip
+                cursor={{ fill: '#f9fafb' }}
+                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              />
+              <Bar dataKey="count" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Product List */}
